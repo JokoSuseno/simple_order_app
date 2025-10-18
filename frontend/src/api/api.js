@@ -29,6 +29,7 @@ export const getCategories = () => API.get('/products/categories');
 // Orders
 export const createOrder = (data, token) => API.post('/orders', data, { headers: { Authorization: `Bearer ${token}` } });
 export const getOrders = (token) => API.get('/orders', { headers: { Authorization: `Bearer ${token}` } });
+export const getOrderDetails = (orderId, token) => API.get(`/orders/${orderId}`, { headers: { Authorization: `Bearer ${token}` } });
 
 // Dashboard
 export const getDashboardStats = () => API.get('/dashboard/stats');
