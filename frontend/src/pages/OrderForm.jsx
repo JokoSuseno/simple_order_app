@@ -3,15 +3,27 @@ import { getProducts, createOrder } from '../api/api';
 
 export default function OrderForm({ token }) {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [cart, setCart] = useState([]);
   const [customerName, setCustomerName] = useState('');
   const [message, setMessage] = useState('');
   const [orderInfo, setOrderInfo] = useState(null);
 
   useEffect(() => {
-    getProducts().then(res => setProducts(res.data))
+    getProducts().then(res => {
+      setProducts(res.data);
+      setFilteredProducts(res.data);
+    })
       .catch(err => console.error('Failed to load products:', err));
   }, []);
+
+  useEffect(() => {
+    const filtered = products.filter(product => 
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredProducts(filtered);
+  }, [searchTerm, products]);
 
   const addToCart = (product) => {
     const existingItem = cart.find(item => item.product_id === product.id);
@@ -81,7 +93,10 @@ export default function OrderForm({ token }) {
       setCustomerName('');
       
       // Refresh products to update stock
-      getProducts().then(res => setProducts(res.data));
+      getProducts().then(res => {
+        setProducts(res.data);
+        setFilteredProducts(res.data);
+      });
     } catch (err) {
       setMessage(err.response?.data?.error || 'Failed to create order');
       setOrderInfo(null);
@@ -95,10 +110,24 @@ export default function OrderForm({ token }) {
           <div className="card">
             <div className="card-header">
               <h4 className="mb-0">Products</h4>
+              <div className="mt-2">
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
             </div>
             <div className="card-body">
               <div className="row">
-                {products.map(product => (
+                {filteredProducts.length === 0 ? (
+                  <div className="col-12">
+                    <p className="text-muted text-center">No products found</p>
+                  </div>
+                ) : (
+                  filteredProducts.map(product => (
                   <div key={product.id} className="col-md-6 mb-3">
                     <div className="card">
                       <div className="card-body">
@@ -117,7 +146,8 @@ export default function OrderForm({ token }) {
                       </div>
                     </div>
                   </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </div>
