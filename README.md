@@ -5,12 +5,15 @@ Aplikasi sederhana untuk mengelola pesanan produk dengan fitur login, manajemen 
 ## Fitur
 
 - ✅ Login dan Logout
-- ✅ List Produk (nama, harga, stok, kategori)
-- ✅ Buat Pesanan: Pilih produk dan jumlah
-- ✅ Lihat Riwayat Pesanan
+- ✅ List Produk (nama, harga, stok)
+- ✅ Buat Pesanan: Pilih produk dan jumlah dengan search
+- ✅ Lihat Riwayat Pesanan dengan detail
 - ✅ Dashboard Analytics
 - ✅ Product Management (CRUD)
-- ✅ Search & Filter
+- ✅ Search Product di Create Order
+- ✅ Auto Stock Deduction setelah order
+- ✅ Order Number Generation
+- ✅ Shopping Cart dengan quantity control
 
 ## Tech Stack
 
@@ -63,8 +66,9 @@ npm run dev
 - `POST /products` - Create product
 - `PUT /products/:id` - Update product
 - `DELETE /products/:id` - Delete product
-- `POST /orders` - Create order
+- `POST /orders` - Create order (auto stock deduction)
 - `GET /orders` - Get user orders
+- `GET /orders/:id` - Get order details
 - `GET /dashboard/stats` - Get dashboard statistics
 
 ## Default Login
@@ -78,7 +82,10 @@ npm run dev
 - id, username, password
 
 **Products:**
-- id, name, price, stock, category
+- id, name, price, stock
 
 **Orders:**
-- id, product_id, quantity, username, created_at
+- id, order_number, username, customer_name, total_amount, status, created_at
+
+**Order Details:**
+- id, order_id, product_id, quantity, price, subtotal
